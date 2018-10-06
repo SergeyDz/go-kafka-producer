@@ -27,8 +27,8 @@ func main() {
 	}
 
 	for {
-		msg := "test " + time.Now().Format("20060102150405")
-		publish(msg, producer)
+		msg := "test message " + time.Now().Format("2006-01-02 15:04:05")
+		publish(msg, topic, producer)
 		time.Sleep(60 * time.Second)
 	}
 }
@@ -43,29 +43,20 @@ func initProducer() (sarama.SyncProducer, error) {
 	config.Producer.RequiredAcks = sarama.WaitForAll
 	config.Producer.Return.Successes = true
 
-	// async producer
-	//prd, err := sarama.NewAsyncProducer([]string{kafkaConn}, config)
-
 	// sync producer
 	prd, err := sarama.NewSyncProducer([]string{kafkaConn}, config)
 
 	return prd, err
 }
 
-func publish(message string, producer sarama.SyncProducer) {
+func publish(message string, topic string, producer sarama.SyncProducer) {
 	// publish sync
 	msg := &sarama.ProducerMessage{
 		Topic: topic,
 		Value: sarama.StringEncoder(message),
 	}
-	p, o, err := producer.SendMessage(msg)
+	_, _, err := producer.SendMessage(msg)
 	if err != nil {
 		fmt.Println("Error publish: ", err.Error())
 	}
-
-	// publish async
-	//producer.Input() <- &sarama.ProducerMessage{
-
-	fmt.Println("Partition: ", p)
-	fmt.Println("Offset: ", o)
 }
