@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/Shopify/sarama"
@@ -52,7 +53,7 @@ func initProducer() (sarama.SyncProducer, error) {
 	config.Producer.Return.Successes = true
 
 	// sync producer
-	prd, err := sarama.NewSyncProducer([]string{kafkaConn}, config)
+	prd, err := sarama.NewSyncProducer(strings.Split(kafkaConn, ","), config)
 
 	return prd, err
 }
