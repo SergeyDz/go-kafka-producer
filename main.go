@@ -12,12 +12,20 @@ import (
 var (
 	kafkaConn string
 	topic     string
+	timeout   time.Duration
 )
 
 func main() {
 	// read settings
 	kafkaConn = os.Getenv("KAFKA_BROKER")
 	topic = os.Getenv("TOPIC")
+
+	timeoutStr := os.Getenv("TIMEOUT")
+	timeout, err := time.ParseDuration(timeoutStr)
+	if err != nil {
+		fmt.Println(err)
+		timeout = 1 * time.Minute
+	}
 
 	// create producer
 	producer, err := initProducer()
@@ -29,7 +37,7 @@ func main() {
 	for {
 		msg := "test message " + time.Now().Format("2006-01-02 15:04:05")
 		publish(msg, topic, producer)
-		time.Sleep(60 * time.Second)
+		time.Sleep(timeout)
 	}
 }
 
