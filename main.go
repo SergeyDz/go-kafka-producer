@@ -7,19 +7,18 @@ import (
 	"strings"
 	"time"
 
+	"github.com/SergeyDz/go-kafka-producer/config"
 	"github.com/Shopify/sarama"
-
-	configuration "github.com/SergeyDz/go-kafka-producer/config"
 )
 
 var (
-	settings configuration.Config
+	settings config.Config
 )
 
 func main() {
 
 	// init settings
-	settings := configuration.NewConfig()
+	settings := config.NewConfig()
 
 	// create producer
 	producer, err := initProducer()
