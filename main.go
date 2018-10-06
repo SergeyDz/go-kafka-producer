@@ -8,25 +8,18 @@ import (
 	"time"
 
 	"github.com/Shopify/sarama"
+
+	configuration "github.com/SergeyDz/go-kafka-producer/config"
 )
 
 var (
-	kafkaConn string
-	topic     string
-	timeout   time.Duration
+	settings configuration.Config
 )
 
 func main() {
-	// read settings
-	kafkaConn = os.Getenv("KAFKA_BROKER")
-	topic = os.Getenv("TOPIC")
 
-	timeoutStr := os.Getenv("TIMEOUT")
-	timeout, err := time.ParseDuration(timeoutStr)
-	if err != nil {
-		fmt.Println(err)
-		timeout = 1 * time.Minute
-	}
+	// init settings
+	settings := configuration.NewConfig()
 
 	// create producer
 	producer, err := initProducer()
@@ -37,8 +30,8 @@ func main() {
 
 	for {
 		msg := "test message " + time.Now().Format("2006-01-02 15:04:05")
-		publish(msg, topic, producer)
-		time.Sleep(timeout)
+		publish(msg, settings.Topic, producer)
+		time.Sleep(settings.Timeout)
 	}
 }
 
@@ -53,7 +46,7 @@ func initProducer() (sarama.SyncProducer, error) {
 	config.Producer.Return.Successes = true
 
 	// sync producer
-	prd, err := sarama.NewSyncProducer(strings.Split(kafkaConn, ","), config)
+	prd, err := sarama.NewSyncProducer(strings.Split(settings.KafkaBrokers, ","), config)
 
 	return prd, err
 }
