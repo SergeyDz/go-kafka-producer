@@ -31,7 +31,7 @@ func main() {
 
 	for {
 
-		model := model.Metrics{Timestamp: time.Now().Format("2006-01-02 15:04:05"), Container: "fake", CPU: "50%", Memory: "33%"}
+		model := model.Metrics{Timestamp: time.Now().Format("2006-01-02T15:04:05.0000+00:00"), Container: "fake", CPU: "50%", Memory: "33%"}
 		msg, _ := json.Marshal(model)
 		publish(string(msg), settings.Topic, producer)
 
