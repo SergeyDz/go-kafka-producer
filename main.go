@@ -5,12 +5,14 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
 	"github.com/SergeyDz/go-kafka-producer/config"
 	model "github.com/SergeyDz/go-kafka-producer/model"
 	"github.com/Shopify/sarama"
+	"github.com/shirou/gopsutil/mem"
 )
 
 var (
@@ -31,7 +33,8 @@ func main() {
 
 	for {
 
-		model := model.Metrics{Timestamp: time.Now().Format("2006-01-02T15:04:05.0000+00:00"), Container: "fake", CPU: "50%", Memory: "33%"}
+		v, _ := mem.VirtualMemory()
+		model := model.Metrics{Timestamp: time.Now().Format("2006-01-02T15:04:05.0000+00:00"), Container: "fake", CPU: "50%", Memory: strconv.FormatFloat(v.UsedPercent, 'f', 6, 64)}
 		msg, _ := json.Marshal(model)
 		publish(string(msg), settings.Topic, producer)
 
