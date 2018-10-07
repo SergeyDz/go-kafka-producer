@@ -21,7 +21,7 @@ var (
 func main() {
 
 	// init settings
-	settings := config.NewConfig()
+	settings = config.NewConfig()
 
 	// create producer
 	producer, err := initProducer()
