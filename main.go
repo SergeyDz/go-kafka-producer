@@ -8,7 +8,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/KyleBanks/dockerstats"
 	"github.com/SergeyDz/go-kafka-producer/config"
 	model "github.com/SergeyDz/go-kafka-producer/model"
 	"github.com/Shopify/sarama"
@@ -31,16 +30,10 @@ func main() {
 	}
 
 	for {
-		stats, err := dockerstats.Current()
-		if err != nil {
-			panic(err)
-		}
 
-		for _, s := range stats {
-			model := model.Metrics{Timestamp: time.Now().Format("2006-01-02 15:04:05"), Container: s.Container, CPU: s.CPU, Memory: s.Memory.Raw}
-			msg, _ := json.Marshal(model)
-			publish(string(msg), settings.Topic, producer)
-		}
+		model := model.Metrics{Timestamp: time.Now().Format("2006-01-02 15:04:05"), Container: "fake", CPU: "50%", Memory: "33%"}
+		msg, _ := json.Marshal(model)
+		publish(string(msg), settings.Topic, producer)
 
 		time.Sleep(settings.Timeout)
 	}
