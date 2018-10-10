@@ -18,7 +18,7 @@ var (
 )
 
 const (
-	version string = "v1"
+	version string = "v2"
 )
 
 func main() {
