@@ -4,7 +4,7 @@ COPY . .
 RUN go get github.com/Shopify/sarama 
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o app
 
-FROM alpine
+FROM alpine:3.15
 WORKDIR /app
 RUN apk --no-cache add ca-certificates && update-ca-certificates
 ENV KAFKA_BROKER="localhost:9092"
